@@ -173,6 +173,12 @@
       color: #fff;
     }
     .btn-blue:hover { transform: translateY(-2px); box-shadow: 0 8px 28px var(--blue-glow); }
+    .btn-ghost {
+      background: transparent;
+      border: 1.5px solid var(--border-blue);
+      color: var(--cream);
+    }
+    .btn-ghost:hover { background: var(--glass-2); }
 
     /* ─── Timer Ring ─────────────────────────────────────────────────────── */
     .timer-wrap { position: relative; width: 68px; height: 68px; flex-shrink: 0; }
@@ -243,6 +249,8 @@
       border-color: var(--blue);
       box-shadow: 0 0 0 3px rgba(79,195,247,.18);
     }
+    .start-btn-row { display: flex; gap: .7rem; }
+    .start-btn-row .btn { flex: 1; }
     .trivia-meta {
       margin-top: 1.2rem; padding-top: 1rem;
       border-top: 1px solid var(--border-cream);
@@ -251,6 +259,54 @@
     .trivia-meta span {
       font-size: .78rem; color: rgba(232,234,246,.4);
       display: flex; align-items: center; gap: .3rem;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       JOIN SCREEN
+       ═══════════════════════════════════════════════════════════════════════ */
+    .code-input {
+      width: 100%; padding: 1rem 1.1rem;
+      background: rgba(79,195,247,.07); border: 1.5px solid var(--border-blue);
+      border-radius: 50px; color: var(--cream); font-family: var(--font-h);
+      font-size: 1.6rem; text-align: center; outline: none; letter-spacing: .25em;
+      transition: border-color .2s, box-shadow .2s; text-transform: uppercase;
+    }
+    .code-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(79,195,247,.18);
+    }
+    .code-input::placeholder { font-family: var(--font-b); font-size: 1rem; letter-spacing: normal; color: rgba(232,234,246,.3); }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       LOBBY SCREEN
+       ═══════════════════════════════════════════════════════════════════════ */
+    .lobby-card { text-align: center; max-width: 480px; }
+    .room-code-display {
+      font-family: var(--font-h); font-size: 2.6rem; font-weight: 900;
+      color: var(--gold); letter-spacing: .25em;
+      text-shadow: 0 0 28px var(--gold-glow);
+      margin: .4rem 0 .3rem;
+    }
+    .room-code-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: rgba(232,234,246,.4); }
+    .qr-wrap { margin: 1rem auto; display: flex; flex-direction: column; align-items: center; gap: .4rem; }
+    .qr-label { font-size: .72rem; color: rgba(232,234,246,.45); letter-spacing: .05em; }
+    #qr-code canvas, #qr-code img { border-radius: 8px; }
+    .player-list {
+      list-style: none; margin: 1rem 0; display: flex; flex-direction: column; gap: .45rem;
+    }
+    .player-list li {
+      background: var(--glass); border: 1px solid var(--border-blue);
+      border-radius: var(--radius-sm); padding: .55rem .9rem;
+      font-size: .9rem; display: flex; align-items: center; gap: .5rem;
+    }
+    .player-list li .host-badge {
+      font-size: .65rem; background: var(--gold); color: #000;
+      border-radius: 4px; padding: .1rem .35rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .04em; margin-left: auto;
+    }
+    .waiting-msg {
+      font-size: .82rem; color: rgba(232,234,246,.4);
+      margin-bottom: .8rem; font-style: italic;
     }
 
     /* ══════════════════════════════════════════════════════════════════════
@@ -280,6 +336,12 @@
       font-weight: 600; text-align: center;
       color: var(--cream); line-height: 1.5; max-width: 560px;
     }
+    .answered-bar {
+      text-align: center; padding: .3rem 1rem;
+      font-size: .75rem; color: rgba(232,234,246,.45);
+      flex-shrink: 0;
+    }
+    .answered-bar span { color: var(--blue); font-weight: 700; }
 
     /* ─── Answer Grid ────────────────────────────────────────────────────── */
     .answer-grid {
@@ -321,32 +383,42 @@
     @keyframes flashCorrect { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
     /* ══════════════════════════════════════════════════════════════════════
-       RESULT SCREEN
+       LEADERBOARD SCREEN
        ═══════════════════════════════════════════════════════════════════════ */
-    .result-card   { text-align: center; }
-    .result-icon   { font-size: 3.5rem; margin-bottom: .6rem; animation: popIn .5s cubic-bezier(.17,.67,.35,1.3); }
-    @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
-    .result-verdict {
-      font-family: var(--font-h); font-size: 1.35rem;
-      color: var(--cream); letter-spacing: .04em;
+    .leaderboard-screen { justify-content: flex-start; padding-top: 1.5rem; padding-bottom: 1.5rem; }
+    .leaderboard-wrap { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 1rem; }
+    .lb-title {
+      font-family: var(--font-h); font-size: 1.1rem; color: var(--blue);
+      text-align: center; letter-spacing: .08em;
     }
-    .result-delta {
-      font-family: var(--font-h); font-size: 2rem;
-      font-weight: 700; margin: .5rem 0 .2rem;
+    .lb-subtitle { font-size: .78rem; color: rgba(232,234,246,.4); text-align: center; }
+    .lb-list { list-style: none; display: flex; flex-direction: column; gap: .45rem; }
+    .lb-row {
+      display: flex; align-items: center; gap: .7rem;
+      background: var(--glass-2); border: 1px solid var(--border-blue);
+      border-radius: var(--radius-sm); padding: .65rem .9rem;
     }
-    .result-delta.pos { color: var(--correct-green); }
-    .result-delta.neg { color: var(--wrong-red); }
-    .result-delta.neu { color: rgba(232,234,246,.45); }
-    .result-score-label { font-size: .78rem; color: rgba(232,234,246,.5); text-transform: uppercase; letter-spacing: .06em; }
-    .result-score { font-family: var(--font-h); font-size: 1.9rem; font-weight: 700; color: var(--gold); margin-top: .1rem; }
-    .result-answer-wrap { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--border-cream); }
-    .result-answer-label { font-size: .78rem; color: rgba(232,234,246,.5); margin-bottom: .4rem; }
-    .result-answer-text  { font-family: var(--font-h); font-size: .9rem; color: var(--gold); font-weight: 700; letter-spacing: .02em; }
-    .auto-next-bar {
-      margin-top: 1.2rem; height: 4px;
-      background: rgba(232,234,246,.12); border-radius: 2px; overflow: hidden;
+    .lb-row.lb-me { border-color: var(--gold); background: rgba(255,215,0,.06); }
+    .lb-rank {
+      font-family: var(--font-h); font-size: .9rem; font-weight: 700;
+      color: var(--blue); width: 24px; text-align: center; flex-shrink: 0;
     }
-    .auto-next-fill { height: 100%; width: 0%; background: var(--blue); border-radius: 2px; }
+    .lb-rank.top1 { color: var(--gold); }
+    .lb-rank.top2 { color: #b0bec5; }
+    .lb-rank.top3 { color: #cd7f32; }
+    .lb-name { flex: 1; font-size: .9rem; font-weight: 600; }
+    .lb-delta {
+      font-family: var(--font-h); font-size: .78rem; font-weight: 700;
+      min-width: 52px; text-align: right;
+    }
+    .lb-delta.pos { color: var(--correct-green); }
+    .lb-delta.neg { color: var(--wrong-red); }
+    .lb-delta.neu { color: rgba(232,234,246,.4); }
+    .lb-score {
+      font-family: var(--font-h); font-size: .88rem; font-weight: 700;
+      color: var(--gold); min-width: 56px; text-align: right;
+    }
+    .lb-disconnected { opacity: .45; text-decoration: line-through; }
 
     /* ══════════════════════════════════════════════════════════════════════
        FINAL SCREEN
@@ -383,13 +455,6 @@
       font-size: .98rem; color: var(--cream); font-weight: 600;
     }
     .fsc-correct strong { color: var(--correct-green); }
-    .final-message {
-      background: var(--glass); border: 1px solid var(--border-blue);
-      border-radius: var(--radius-sm); padding: 1rem 1.2rem;
-      font-family: var(--font-h); font-size: .82rem;
-      color: var(--cream); text-align: center; line-height: 1.7;
-      width: 100%; letter-spacing: .02em;
-    }
     .final-actions {
       display: flex; gap: .8rem; flex-wrap: wrap;
       justify-content: center; width: 100%; margin-top: .5rem;
@@ -427,7 +492,10 @@
             autocomplete="off"
             spellcheck="false"
           />
-          <button type="submit" class="btn btn-gold btn-lg">Begin Your Quest ⚡</button>
+          <div class="start-btn-row">
+            <button type="submit" id="btnHost" class="btn btn-gold btn-lg">Host Game ✦</button>
+            <button type="button" id="btnJoinNav" class="btn btn-blue btn-lg">Join Game →</button>
+          </div>
         </form>
         <p id="startError" class="error-msg" hidden></p>
         <div class="trivia-meta">
@@ -439,17 +507,81 @@
     </div>
 
     <!-- ══════════════════════════════════════════════════════════
+         SCREEN: JOIN
+    ═══════════════════════════════════════════════════════════════ -->
+    <div id="screen-join" class="screen">
+      <div class="card join-card">
+        <div class="brand">
+          <div class="brand-icon">🛸</div>
+          <h1 class="brand-title">Join Game</h1>
+          <h2 class="brand-sub">Enter Room Code</h2>
+        </div>
+        <form id="joinForm" class="join-form" autocomplete="off">
+          <input
+            id="joinNameInput"
+            class="name-input"
+            type="text"
+            placeholder="Your name"
+            maxlength="20"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <input
+            id="codeInput"
+            class="code-input"
+            type="text"
+            placeholder="Room code"
+            maxlength="4"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button type="submit" class="btn btn-gold btn-lg">Join →</button>
+          <button type="button" id="btnBackToStart" class="btn btn-ghost">← Back</button>
+        </form>
+        <p id="joinError" class="error-msg" hidden></p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SCREEN: LOBBY
+    ═══════════════════════════════════════════════════════════════ -->
+    <div id="screen-lobby" class="screen">
+      <div class="card lobby-card">
+        <div class="room-code-label">Room Code</div>
+        <div class="room-code-display" id="lobbyRoomCode">——</div>
+
+        <!-- QR code — visible to host only -->
+        <div id="qrSection" class="qr-wrap" hidden>
+          <div id="qr-code"></div>
+          <div class="qr-label">Scan to join</div>
+        </div>
+
+        <div class="saber-divider" style="margin:.8rem 0"></div>
+
+        <ul class="player-list" id="playerList"></ul>
+
+        <p class="waiting-msg" id="waitingMsg">Waiting for players…</p>
+
+        <button id="btnStart" class="btn btn-gold btn-lg" style="width:100%" hidden>
+          Start Game ⚡
+        </button>
+        <p class="waiting-msg" id="waitForHostMsg" hidden>Waiting for the host to start…</p>
+        <p id="lobbyError" class="error-msg" hidden></p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
          SCREEN: QUESTION
     ═══════════════════════════════════════════════════════════════ -->
     <div id="screen-question" class="screen question-screen">
       <div class="q-header">
-        <div class="q-progress">Q&nbsp;<span id="qNum">1</span>&nbsp;/&nbsp;<span id="qTotal">20</span></div>
+        <div class="q-progress">Q&nbsp;<span id="qNum">1</span>&nbsp;/&nbsp;<span id="qTotal">24</span></div>
         <div class="timer-wrap">
           <svg class="timer-svg" viewBox="0 0 100 100" aria-hidden="true">
             <circle class="timer-track" cx="50" cy="50" r="42"/>
             <circle class="timer-ring" id="timerRing" cx="50" cy="50" r="42"/>
           </svg>
-          <span class="timer-num" id="timerNum">60</span>
+          <span class="timer-num" id="timerNum">20</span>
         </div>
         <div class="q-score-badge">
           <span class="q-score-label">Score</span>
@@ -459,6 +591,10 @@
 
       <div class="q-body">
         <p class="q-text" id="qText"></p>
+      </div>
+
+      <div class="answered-bar" id="answeredBar">
+        <span id="answeredCount">0</span> / <span id="answeredTotal">0</span> answered
       </div>
 
       <div class="answer-grid" id="answerGrid">
@@ -482,25 +618,17 @@
     </div>
 
     <!-- ══════════════════════════════════════════════════════════
-         SCREEN: RESULT (per question)
+         SCREEN: LEADERBOARD (between questions)
     ═══════════════════════════════════════════════════════════════ -->
-    <div id="screen-result" class="screen">
-      <div class="card result-card">
-        <div class="result-icon" id="resultIcon">✅</div>
-        <h2 class="result-verdict" id="resultVerdict">Correct!</h2>
-        <div class="result-delta" id="resultDelta">+1500</div>
-        <div class="result-score-label">Total score</div>
-        <div class="result-score" id="resultScore">1500</div>
-        <div class="result-answer-wrap">
-          <p class="result-answer-label">The correct answer was:</p>
-          <div class="result-answer-text" id="resultAnswer"></div>
-        </div>
-        <button id="btnNext" class="btn btn-blue btn-lg" style="margin-top:1.2rem;width:100%">
+    <div id="screen-leaderboard" class="screen leaderboard-screen">
+      <div class="leaderboard-wrap">
+        <h2 class="lb-title" id="lbTitle">Standings</h2>
+        <p class="lb-subtitle" id="lbSubtitle"></p>
+        <ul class="lb-list" id="lbList"></ul>
+        <button id="btnNextQuestion" class="btn btn-gold btn-lg" style="width:100%;margin-top:.5rem" hidden>
           Next Question →
         </button>
-        <div class="auto-next-bar" style="margin-top:.8rem">
-          <div class="auto-next-fill" id="autoNextFill"></div>
-        </div>
+        <p class="waiting-msg" id="waitNextMsg" hidden>Waiting for host to continue…</p>
       </div>
     </div>
 
@@ -509,7 +637,7 @@
     ═══════════════════════════════════════════════════════════════ -->
     <div id="screen-final" class="screen final-screen">
       <div class="final-wrap">
-        <h1 class="final-title">Mission Complete!</h1>
+        <h1 class="final-title">Game Over!</h1>
         <div class="saber-divider"></div>
         <p class="final-subtitle">⚔️ &nbsp; The Force Has Spoken &nbsp; ⚔️</p>
 
@@ -517,10 +645,10 @@
           <div class="fsc-label">Your Final Score</div>
           <div class="fsc-score" id="finalScore">0</div>
           <div class="fsc-pts">points</div>
-          <div class="fsc-correct" id="finalCorrect">0 / 20 correct</div>
+          <div class="fsc-correct" id="finalCorrect">0 / 24 correct</div>
         </div>
 
-        <div class="final-message" id="finalMessage"></div>
+        <ul class="lb-list" id="finalLbList" style="width:100%"></ul>
 
         <div class="final-actions">
           <button id="btnPlayAgain" class="btn btn-gold btn-lg">Play Again 🔄</button>
@@ -531,183 +659,77 @@
 
   </div><!-- #app -->
 
+  <!-- Socket.io client (served by server) -->
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- QR Code library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
   <script>
   'use strict';
 
   /* ══════════════════════════════════════════════════════════════════════
-     QUESTIONS — 24 total
-     ═══════════════════════════════════════════════════════════════════════ */
-  const QUESTIONS = [
-    {
-      text: 'What was the original planned title for Return of the Jedi before George Lucas changed it?',
-      options: ['Revenge of the Jedi', 'Return of the Jedi (there was no change)', 'Blue Harvest', 'The Jedi Strike Back'],
-      correct: 0,
-    },
-    {
-      text: 'In the trash compactor scene in Episode IV: A New Hope, who said "One thing\'s for sure — we are all going to be a lot thinner"?',
-      options: ['Han Solo', 'Princess Leia', 'Luke Skywalker', 'C-3PO'],
-      correct: 0,
-    },
-    {
-      text: 'Which Imperial warlord secretly experiments on Grogu\'s Force-sensitive blood to create enhanced soldiers for a new Empire?',
-      options: ['Grand Admiral Thrawn', 'Governor Pryce', 'Director Krennic', 'Moff Gideon'],
-      correct: 3,
-    },
-    {
-      text: 'What is the name of Mon Mothma\'s husband in Andor, whose connections she used to disguise her rebel fundraising?',
-      options: ['Perrin Fertha', 'Bail Organa', 'Luthen Rael', 'Tay Kolma'],
-      correct: 0,
-    },
-    {
-      text: 'What is the industrialized planet — home to Cassian\'s adoptive mother Maarva — where the Andor series begins and ends?',
-      options: ['Ferrix', 'Morlana One', 'Aldhani', 'Scarif'],
-      correct: 0,
-    },
-    {
-      text: 'In Revenge of the Sith, on which jungle planet does Yoda fight alongside Wookiee warriors during the execution of Order 66?',
-      options: ['Kashyyyk', 'Felucia', 'Mygeeto', 'Utapau'],
-      correct: 0,
-    },
-    {
-      text: 'In Revenge of the Sith, on which sinkhole planet does Obi-Wan Kenobi track down and defeat General Grievous?',
-      options: ['Utapau', 'Kashyyyk', 'Coruscant', 'Mustafar'],
-      correct: 0,
-    },
-    {
-      text: 'Who played Queen Amidala\'s handmaiden and decoy Sabé in The Phantom Menace?',
-      options: ['Daisy Ridley', 'Felicity Jones', 'Emilia Clarke', 'Keira Knightley'],
-      correct: 3,
-    },
-    {
-      text: 'Who serves as the genetic template for the Republic\'s clone army?',
-      options: ['Boba Fett', 'Captain Rex', 'Jango Fett', 'Commander Cody'],
-      correct: 2,
-    },
-    {
-      text: 'What type of ship features twin ion engines — the very feature that gives it its name?',
-      options: ['TIE Fighter', 'X-Wing', 'Star Destroyer', 'Jedi Starfighter'],
-      correct: 0,
-    },
-    {
-      text: 'Who played the role of Jyn Erso in "Rogue One: A Star Wars Story"?',
-      options: ['Daisy Ridley', 'Emilia Clarke', 'Keira Knightley', 'Felicity Jones'],
-      correct: 3,
-    },
-    {
-      text: 'Who gave Kylo Ren his distinctive facial scar?',
-      options: ['Rey', 'Luke Skywalker', 'Supreme Leader Snoke', 'Captain Phasma'],
-      correct: 0,
-    },
-    {
-      text: 'How old was Padmé Amidala when she was elected Queen of Naboo?',
-      options: ['14', '13', '16', '17'],
-      correct: 0,
-    },
-    {
-      text: 'What is Yoda\'s home planet?',
-      options: ['Never revealed', 'Dagobah', 'Forest Moon of Endor', 'Ach-To'],
-      correct: 0,
-    },
-    {
-      text: 'How is Kylo Ren related to Luke Skywalker?',
-      options: ['Nephew', 'Cousin', 'Not related', 'Son'],
-      correct: 0,
-    },
-    {
-      text: 'How many languages can C-3PO speak?',
-      options: ['6 million', '10 thousand', '10 million', '500'],
-      correct: 0,
-    },
-    {
-      text: 'What is the highest-grossing Star Wars movie — adjusted for inflation?',
-      options: ['The Force Awakens', 'A New Hope', 'Return of the Jedi', 'Revenge of the Sith'],
-      correct: 1,
-    },
-    {
-      text: 'What does Yoda say is the path to the dark side?',
-      options: ['Fear', 'Anger', 'Hate', 'Love'],
-      correct: 0,
-    },
-    {
-      text: 'Sound designers created the distinctive engine sound of the Millennium Falcon from what real-world source?',
-      options: ['A 1965 Ford Mustang', 'A malfunctioning hotel air conditioner', 'An industrial coffee grinder on low speed', '4 hair dryers running simultaneously'],
-      correct: 1,
-    },
-    {
-      text: 'What do the letters AT-AT stand for in the Imperial ground assault walkers?',
-      options: ['All-Terrain Armored Transport', 'Advanced Terrain Assault Tank', 'Arctic Terrain Assault Transport', 'Advanced Tactical Armored Transport'],
-      correct: 0,
-    },
-    {
-      text: 'What was the last Star Wars film to be released on VHS?',
-      options: ['Episode II: Attack of the Clones', 'Episode III: Revenge of the Sith', 'Episode I: The Phantom Menace', 'Return of the Jedi'],
-      correct: 0,
-    },
-    {
-      text: 'What real-world city served as the inspiration for Han Solo\'s home planet Corellia?',
-      options: ['Venice', 'London', 'New York', 'Naples'],
-      correct: 0,
-    },
-    {
-      text: 'How much did Peter Mayhew\'s Chewbacca costume weigh?',
-      options: ['8 pounds', '150 pounds', '40 pounds', '25 pounds'],
-      correct: 0,
-    },
-    {
-      text: 'The first two Star Wars anthology films — Rogue One and Solo — each end with a ship en route to which location?',
-      options: ['Tatooine', 'Coruscant', 'Yavin 4', 'Moon of Endor'],
-      correct: 0,
-    },
-  ];
-
-  /* ══════════════════════════════════════════════════════════════════════
      CONSTANTS
      ═══════════════════════════════════════════════════════════════════════ */
-  const QUESTION_TIME   = 60;
-  const MAX_POINTS      = 1000;
-  const SPEED_BONUS_MAX = 500;
-  const WRONG_PENALTY   = 500;
-  const CIRC            = 2 * Math.PI * 42;
+  const CIRC = 2 * Math.PI * 42;
 
   /* ══════════════════════════════════════════════════════════════════════
-     STATE
+     CLIENT STATE
      ═══════════════════════════════════════════════════════════════════════ */
-  let playerName        = '';
-  let score             = 0;
-  let correctCount      = 0;
-  let currentIndex      = 0;
-  let timerHandle       = null;
-  let timerRemain       = 0;
-  let questionStart     = null;
-  let answered          = false;
-  let autoNextHandle    = null;
-  let shuffledQuestions = [];
+  let myName          = '';
+  let myScore         = 0;
+  let myCorrectCount  = 0;
+  let isHost          = false;
+  let roomCode        = '';
+  let currentQIndex   = -1;
+  let answered        = false;
+  let myAnswerIdx     = null;
+  let timerHandle     = null;
+  let questionDurMs   = 20000;
+  let questionStartTs = 0;
+
+  /* ══════════════════════════════════════════════════════════════════════
+     SOCKET
+     ═══════════════════════════════════════════════════════════════════════ */
+  const socket = io();
 
   /* ══════════════════════════════════════════════════════════════════════
      DOM REFS
      ═══════════════════════════════════════════════════════════════════════ */
-  const screens       = document.querySelectorAll('.screen');
-  const nameInput     = document.getElementById('nameInput');
-  const startForm     = document.getElementById('startForm');
-  const startError    = document.getElementById('startError');
-  const qNum          = document.getElementById('qNum');
-  const qTotal        = document.getElementById('qTotal');
-  const qText         = document.getElementById('qText');
-  const timerRing     = document.getElementById('timerRing');
-  const timerNum      = document.getElementById('timerNum');
-  const scoreDisplay  = document.getElementById('scoreDisplay');
-  const answerBtns    = Array.from(document.querySelectorAll('.ans-btn'));
-  const resultIcon    = document.getElementById('resultIcon');
-  const resultVerdict = document.getElementById('resultVerdict');
-  const resultDelta   = document.getElementById('resultDelta');
-  const resultScore   = document.getElementById('resultScore');
-  const resultAnswer  = document.getElementById('resultAnswer');
-  const btnNext       = document.getElementById('btnNext');
-  const autoNextFill  = document.getElementById('autoNextFill');
-  const finalScore    = document.getElementById('finalScore');
-  const finalCorrect  = document.getElementById('finalCorrect');
-  const finalMessage  = document.getElementById('finalMessage');
-  const btnPlayAgain  = document.getElementById('btnPlayAgain');
+  const screens        = document.querySelectorAll('.screen');
+  const nameInput      = document.getElementById('nameInput');
+  const startForm      = document.getElementById('startForm');
+  const startError     = document.getElementById('startError');
+  const btnJoinNav     = document.getElementById('btnJoinNav');
+  const joinNameInput  = document.getElementById('joinNameInput');
+  const codeInput      = document.getElementById('codeInput');
+  const joinForm       = document.getElementById('joinForm');
+  const joinError      = document.getElementById('joinError');
+  const btnBackToStart = document.getElementById('btnBackToStart');
+  const lobbyRoomCode  = document.getElementById('lobbyRoomCode');
+  const qrSection      = document.getElementById('qrSection');
+  const playerList     = document.getElementById('playerList');
+  const waitingMsg     = document.getElementById('waitingMsg');
+  const btnStart       = document.getElementById('btnStart');
+  const waitForHostMsg = document.getElementById('waitForHostMsg');
+  const lobbyError     = document.getElementById('lobbyError');
+  const qNum           = document.getElementById('qNum');
+  const qTotal         = document.getElementById('qTotal');
+  const qText          = document.getElementById('qText');
+  const timerRing      = document.getElementById('timerRing');
+  const timerNum       = document.getElementById('timerNum');
+  const scoreDisplay   = document.getElementById('scoreDisplay');
+  const answeredCount  = document.getElementById('answeredCount');
+  const answeredTotal  = document.getElementById('answeredTotal');
+  const answerBtns     = Array.from(document.querySelectorAll('.ans-btn'));
+  const lbTitle        = document.getElementById('lbTitle');
+  const lbSubtitle     = document.getElementById('lbSubtitle');
+  const lbList         = document.getElementById('lbList');
+  const btnNextQuestion = document.getElementById('btnNextQuestion');
+  const waitNextMsg    = document.getElementById('waitNextMsg');
+  const finalScore     = document.getElementById('finalScore');
+  const finalCorrect   = document.getElementById('finalCorrect');
+  const finalLbList    = document.getElementById('finalLbList');
+  const btnPlayAgain   = document.getElementById('btnPlayAgain');
 
   /* ══════════════════════════════════════════════════════════════════════
      HELPERS
@@ -718,6 +740,15 @@
     if (el) el.classList.add('active');
   }
 
+  function setError(el, msg) {
+    el.textContent = msg;
+    el.hidden = !msg;
+  }
+
+  function getName() {
+    return nameInput.value.trim();
+  }
+
   function setTimerUI(remaining, total) {
     const pct    = remaining / total;
     const offset = CIRC * (1 - pct);
@@ -726,73 +757,267 @@
     timerRing.style.stroke = pct > 0.5 ? '#4FC3F7' : pct > 0.25 ? '#FFD700' : '#EF5350';
   }
 
-  function clearAllTimers() {
-    clearInterval(timerHandle);
-    clearTimeout(autoNextHandle);
-    timerHandle = autoNextHandle = null;
+  function stopTimer() {
+    if (timerHandle) { clearInterval(timerHandle); timerHandle = null; }
   }
 
-  function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
+  function startVisualTimer(durationMs, serverTs) {
+    stopTimer();
+    const totalSec = Math.round(durationMs / 1000);
+
+    function tick() {
+      const elapsed = Date.now() - serverTs;
+      const remaining = Math.max(0, Math.ceil((durationMs - elapsed) / 1000));
+      setTimerUI(remaining, totalSec);
     }
-    return a;
+    tick();
+    timerHandle = setInterval(tick, 250);
   }
 
-  function prepareQuestions() {
-    return shuffle(QUESTIONS).map(q => {
-      const correctText = q.options[q.correct];
-      const opts = shuffle(q.options);
-      return { text: q.text, options: opts, correct: opts.indexOf(correctText) };
-    });
-  }
-
-  function lockAnswers(selectedIdx) {
-    answerBtns.forEach((btn, i) => {
-      btn.classList.add('locked');
-      if (i === selectedIdx) btn.classList.add('selected');
-    });
-  }
-
-  function revealAnswers(correctIdx, yourIdx) {
-    answerBtns.forEach((btn, i) => {
-      btn.classList.add('locked');
-      if (i === correctIdx) {
-        btn.classList.add('reveal-correct');
-      } else if (yourIdx !== null && i === yourIdx && yourIdx !== correctIdx) {
-        btn.classList.add('wrong');
+  function renderPlayerList(players) {
+    playerList.innerHTML = '';
+    players.forEach(p => {
+      const li = document.createElement('li');
+      li.textContent = p.name;
+      if (p.name === myName && isHost) {
+        const badge = document.createElement('span');
+        badge.className = 'host-badge';
+        badge.textContent = 'Host';
+        li.appendChild(badge);
       }
+      playerList.appendChild(li);
     });
+  }
+
+  function renderLeaderboard(players, containerEl) {
+    containerEl.innerHTML = '';
+    players.forEach((p, i) => {
+      const li = document.createElement('li');
+      li.className = 'lb-row' + (p.name === myName ? ' lb-me' : '') + (p.connected === false ? ' lb-disconnected' : '');
+
+      const rankEl = document.createElement('span');
+      rankEl.className = 'lb-rank' + (i === 0 ? ' top1' : i === 1 ? ' top2' : i === 2 ? ' top3' : '');
+      rankEl.textContent = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+
+      const nameEl = document.createElement('span');
+      nameEl.className = 'lb-name';
+      nameEl.textContent = p.name;
+
+      const scoreEl = document.createElement('span');
+      scoreEl.className = 'lb-score';
+      scoreEl.textContent = p.score.toLocaleString();
+
+      li.appendChild(rankEl);
+      li.appendChild(nameEl);
+
+      if (p.delta !== undefined) {
+        const deltaEl = document.createElement('span');
+        deltaEl.className = 'lb-delta ' + (p.delta > 0 ? 'pos' : p.delta < 0 ? 'neg' : 'neu');
+        deltaEl.textContent = p.delta > 0 ? '+' + p.delta : p.delta === 0 ? '—' : p.delta;
+        li.appendChild(deltaEl);
+      }
+
+      li.appendChild(scoreEl);
+      containerEl.appendChild(li);
+    });
+  }
+
+  function generateQR(code) {
+    const qrDiv = document.getElementById('qr-code');
+    qrDiv.innerHTML = '';
+    const url = window.location.origin + '/?join=' + code;
+    new QRCode(qrDiv, {
+      text: url,
+      width: 140,
+      height: 140,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M,
+    });
+  }
+
+  function prefillJoinCode() {
+    const params = new URLSearchParams(window.location.search);
+    const joinParam = params.get('join');
+    if (joinParam) {
+      codeInput.value = joinParam.toUpperCase().slice(0, 4);
+      showScreen('join');
+    }
   }
 
   /* ══════════════════════════════════════════════════════════════════════
-     GAME FLOW
+     PARTICLES (cosmetic)
      ═══════════════════════════════════════════════════════════════════════ */
-  function startGame() {
-    score             = 0;
-    correctCount      = 0;
-    currentIndex      = 0;
-    shuffledQuestions = prepareQuestions();
-    showQuestion(0);
-  }
+  (function spawnParticles() {
+    const bg = document.getElementById('particlesBg');
+    const glyphs = ['⚔️','✦','⭐','🌟','💫','✨'];
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('span');
+      p.className = 'particle';
+      p.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      p.style.cssText = `left:${Math.random()*100}%;font-size:${.6+Math.random()*.8}rem;animation-duration:${8+Math.random()*14}s;animation-delay:${-Math.random()*20}s`;
+      bg.appendChild(p);
+    }
+  })();
 
-  function showQuestion(index) {
-    clearAllTimers();
-    answered     = false;
-    currentIndex = index;
-    const q = shuffledQuestions[index];
+  /* ══════════════════════════════════════════════════════════════════════
+     UI EVENT HANDLERS
+     ═══════════════════════════════════════════════════════════════════════ */
 
-    qNum.textContent   = index + 1;
-    qTotal.textContent = shuffledQuestions.length;
-    qText.textContent  = q.text;
-    scoreDisplay.textContent = score.toLocaleString();
+  // Start screen → host
+  startForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = getName();
+    if (!name) { setError(startError, 'Please enter your name.'); return; }
+    setError(startError, '');
+    myName = name;
+    socket.emit('create_room', { name });
+  });
+
+  // Start screen → navigate to join
+  btnJoinNav.addEventListener('click', () => {
+    const name = getName();
+    if (name) joinNameInput.value = name;
+    setError(startError, '');
+    showScreen('join');
+  });
+
+  // Back from join
+  btnBackToStart.addEventListener('click', () => {
+    setError(joinError, '');
+    showScreen('start');
+  });
+
+  // Join form
+  joinForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = joinNameInput.value.trim();
+    const code = codeInput.value.trim().toUpperCase();
+    if (!name) { setError(joinError, 'Please enter your name.'); return; }
+    if (code.length !== 4) { setError(joinError, 'Enter a 4-character room code.'); return; }
+    setError(joinError, '');
+    myName = name;
+    socket.emit('join_room', { code, name });
+  });
+
+  // Code input: uppercase transform
+  codeInput.addEventListener('input', () => {
+    codeInput.value = codeInput.value.toUpperCase();
+  });
+
+  // Lobby: start button (host only)
+  btnStart.addEventListener('click', () => {
+    socket.emit('start_game');
+  });
+
+  // Answer buttons
+  answerBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (answered) return;
+      const idx = parseInt(btn.dataset.idx, 10);
+      answered    = true;
+      myAnswerIdx = idx;
+      answerBtns.forEach(b => b.classList.add('locked'));
+      btn.classList.add('selected');
+      socket.emit('submit_answer', { questionIndex: currentQIndex, answerIdx: idx });
+    });
+  });
+
+  // Leaderboard: next question (host only)
+  btnNextQuestion.addEventListener('click', () => {
+    socket.emit('request_next');
+  });
+
+  // Final: play again → back to start
+  btnPlayAgain.addEventListener('click', () => {
+    myScore        = 0;
+    myCorrectCount = 0;
+    isHost         = false;
+    roomCode       = '';
+    currentQIndex  = -1;
+    showScreen('start');
+  });
+
+  /* ══════════════════════════════════════════════════════════════════════
+     SOCKET EVENT HANDLERS
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  socket.on('room_created', ({ code, players }) => {
+    isHost   = true;
+    roomCode = code;
+    myScore  = 0;
+    myCorrectCount = 0;
+
+    lobbyRoomCode.textContent = code;
+    qrSection.hidden = false;
+    generateQR(code);
+    renderPlayerList(players);
+    btnStart.hidden = false;
+    waitForHostMsg.hidden = true;
+    waitingMsg.hidden = false;
+    setError(lobbyError, '');
+    showScreen('lobby');
+  });
+
+  socket.on('room_joined', ({ code, players }) => {
+    isHost   = false;
+    roomCode = code;
+    myScore  = 0;
+    myCorrectCount = 0;
+
+    lobbyRoomCode.textContent = code;
+    qrSection.hidden = true;
+    renderPlayerList(players);
+    btnStart.hidden = true;
+    waitForHostMsg.hidden = false;
+    waitingMsg.hidden = true;
+    setError(lobbyError, '');
+    showScreen('lobby');
+  });
+
+  socket.on('player_joined', ({ players }) => {
+    renderPlayerList(players);
+  });
+
+  socket.on('player_left', ({ players, leftName }) => {
+    renderPlayerList(players);
+  });
+
+  socket.on('host_changed', ({ newHostName }) => {
+    if (newHostName === myName) {
+      isHost = true;
+      btnStart.hidden = false;
+      waitForHostMsg.hidden = true;
+    }
+    renderPlayerList(Array.from(playerList.querySelectorAll('li')).map(li => ({ name: li.textContent.replace('Host','').trim() })));
+  });
+
+  socket.on('game_started', () => {
+    myScore        = 0;
+    myCorrectCount = 0;
+    answered       = false;
+    myAnswerIdx    = null;
+  });
+
+  socket.on('question', ({ questionIndex, text, options, totalQuestions, questionDuration, serverTimestamp }) => {
+    stopTimer();
+    currentQIndex   = questionIndex;
+    answered        = false;
+    myAnswerIdx     = null;
+    questionDurMs   = questionDuration;
+    questionStartTs = serverTimestamp;
+
+    qNum.textContent   = questionIndex + 1;
+    qTotal.textContent = totalQuestions;
+    qText.textContent  = text;
+    scoreDisplay.textContent = myScore.toLocaleString();
+    answeredCount.textContent = '0';
+    answeredTotal.textContent = '?';
 
     const classes = ['ans-a', 'ans-b', 'ans-c', 'ans-d'];
     answerBtns.forEach((btn, i) => {
-      btn.className = `ans-btn ${classes[i]}`;
-      document.getElementById('opt-' + i).textContent = q.options[i] || '';
+      btn.className = 'ans-btn ' + classes[i];
+      document.getElementById('opt-' + i).textContent = options[i] || '';
     });
 
     timerRing.style.transition       = 'none';
@@ -801,200 +1026,150 @@
     void timerRing.offsetHeight;
     timerRing.style.transition = 'stroke-dashoffset 1s linear, stroke .5s ease';
 
+    startVisualTimer(questionDuration, serverTimestamp);
     showScreen('question');
+  });
 
-    timerRemain   = QUESTION_TIME;
-    questionStart = Date.now();
-    setTimerUI(timerRemain, QUESTION_TIME);
+  socket.on('answer_accepted', () => {
+    // Already handled locally
+  });
 
-    timerHandle = setInterval(() => {
-      timerRemain = Math.max(0, timerRemain - 1);
-      setTimerUI(timerRemain, QUESTION_TIME);
-      if (timerRemain <= 0) { clearInterval(timerHandle); onTimeUp(); }
-    }, 1000);
-  }
+  socket.on('player_answered', ({ answeredCount: ac, totalCount: tc }) => {
+    answeredCount.textContent = ac;
+    answeredTotal.textContent = tc;
+  });
 
-  function onTimeUp() {
-    if (answered) return;
-    answered = true;
-    const q = shuffledQuestions[currentIndex];
-    revealAnswers(q.correct, null);
-    setTimeout(() => showResult(false, 0, q.options[q.correct], true), 1200);
-  }
+  socket.on('question_reveal', ({ correctIndex, playerResults }) => {
+    stopTimer();
 
-  function submitAnswer(selectedIdx) {
-    if (answered) return;
-    answered = true;
-    clearInterval(timerHandle);
-
-    const q        = shuffledQuestions[currentIndex];
-    const elapsed  = (Date.now() - questionStart) / 1000;
-    const timeLeft = Math.max(0, QUESTION_TIME - elapsed);
-    const correct  = selectedIdx === q.correct;
-
-    let delta = correct
-      ? MAX_POINTS + Math.round(SPEED_BONUS_MAX * (timeLeft / QUESTION_TIME))
-      : -WRONG_PENALTY;
-    if (correct) correctCount++;
-    score = Math.max(0, score + delta);
-
-    lockAnswers(selectedIdx);
-    setTimeout(() => {
-      revealAnswers(q.correct, selectedIdx);
-      setTimeout(() => showResult(correct, delta, q.options[q.correct], false), 900);
-    }, 300);
-  }
-
-  function showResult(correct, delta, correctText, noAnswer) {
-    resultIcon.textContent    = noAnswer ? '⏰' : correct ? '✅' : '❌';
-    resultVerdict.textContent = noAnswer ? "Time's Up!" : correct ? 'Correct! ⚡' : 'Wrong!';
-    resultDelta.textContent   = delta > 0 ? `+${delta}` : `${delta}`;
-    resultDelta.className     = 'result-delta ' + (delta > 0 ? 'pos' : delta < 0 ? 'neg' : 'neu');
-    resultScore.textContent   = score.toLocaleString();
-    resultAnswer.textContent  = correctText;
-
-    const isLast = currentIndex === shuffledQuestions.length - 1;
-    btnNext.textContent = isLast ? 'See Final Results 🏆' : 'Next Question →';
-    showScreen('result');
-
-    autoNextFill.style.transition = 'none';
-    autoNextFill.style.width      = '0%';
-    void autoNextFill.offsetHeight;
-    autoNextFill.style.transition = 'width 5s linear';
-    autoNextFill.style.width      = '100%';
-    autoNextHandle = setTimeout(advanceGame, 5000);
-  }
-
-  function advanceGame() {
-    clearTimeout(autoNextHandle);
-    const next = currentIndex + 1;
-    if (next >= shuffledQuestions.length) showFinal();
-    else showQuestion(next);
-  }
-
-  function showFinal() {
-    finalScore.textContent = score.toLocaleString();
-    const pct = correctCount / shuffledQuestions.length;
-    finalCorrect.innerHTML = `<strong style="color:var(--correct-green)">${correctCount}</strong> / ${shuffledQuestions.length} correct`;
-
-    let msg;
-    if (pct === 1) {
-      msg = `🏆 PERFECT SCORE! The Force is OVERWHELMINGLY strong with you, ${playerName}! You are a true Jedi Master!`;
-    } else if (pct >= 0.8) {
-      msg = `⚔️ INCREDIBLE, ${playerName}! Your knowledge of the galaxy rivals that of Master Yoda himself!`;
-    } else if (pct >= 0.6) {
-      msg = `🌟 WELL DONE, ${playerName}! The Force is strong with this one. A skilled Jedi Knight you shall become!`;
-    } else if (pct >= 0.4) {
-      msg = `🚀 NOT BAD, ${playerName}! Your Padawan training continues. Even the greatest Jedi started small!`;
-    } else {
-      msg = `💫 Fear not, ${playerName}! Even Yoda was a student once. May the Force guide your studies!`;
+    // Find my result
+    const me = playerResults.find(p => p.name === myName);
+    if (me) {
+      myScore        = me.newScore;
+      if (me.correct) myCorrectCount++;
     }
-    finalMessage.textContent = msg;
+
+    // Reveal correct/wrong on buttons
+    answerBtns.forEach((btn, i) => {
+      btn.classList.add('locked');
+      if (i === correctIndex) {
+        btn.classList.add('reveal-correct');
+      } else if (myAnswerIdx !== null && i === myAnswerIdx && myAnswerIdx !== correctIndex) {
+        btn.classList.add('wrong');
+      } else if (myAnswerIdx === null) {
+        btn.classList.add('wrong');
+      }
+    });
+    scoreDisplay.textContent = myScore.toLocaleString();
+  });
+
+  socket.on('leaderboard', ({ players, isLastQuestion }) => {
+    // Attach delta from last question reveal (derive from players list ordering)
+    // The server doesn't re-send delta on leaderboard; we'll skip deltas here
+    // (they were shown on question_reveal)
+
+    lbTitle.textContent    = isLastQuestion ? 'Final Leaderboard' : 'Standings';
+    lbSubtitle.textContent = isLastQuestion
+      ? 'Game over — well played!'
+      : `After question ${currentQIndex + 1}`;
+
+    renderLeaderboard(players, lbList);
+
+    if (isHost && !isLastQuestion) {
+      btnNextQuestion.hidden = false;
+      waitNextMsg.hidden = true;
+    } else {
+      btnNextQuestion.hidden = true;
+      waitNextMsg.hidden = isLastQuestion;
+    }
+
+    showScreen('leaderboard');
+  });
+
+  socket.on('game_over', ({ players }) => {
+    stopTimer();
+    const me = players.find(p => p.name === myName);
+    if (me) {
+      finalScore.textContent   = me.score.toLocaleString();
+      finalCorrect.innerHTML   = `<strong>${me.correctCount}</strong> / ${players.length > 0 ? currentQIndex + 1 : 24} correct`;
+    }
+    renderLeaderboard(players, finalLbList);
     showScreen('final');
     launchConfetti();
-  }
+  });
 
-  function resetGame() {
-    clearAllTimers();
-    score = correctCount = currentIndex = 0;
-    answered = false;
-    playerName = '';
-    nameInput.value   = '';
-    startError.hidden = true;
+  socket.on('host_left_game', () => {
+    stopTimer();
+    alert('The host left the game. Returning to start screen.');
     showScreen('start');
-  }
+  });
+
+  socket.on('room_not_found', () => {
+    setError(joinError, 'Room not found. Check the code and try again.');
+  });
+
+  socket.on('name_taken', () => {
+    setError(joinError, 'That name is already taken in this room.');
+  });
+
+  socket.on('error', ({ message }) => {
+    setError(joinError, message);
+    if (document.getElementById('screen-lobby').classList.contains('active')) {
+      setError(lobbyError, message);
+    }
+  });
 
   /* ══════════════════════════════════════════════════════════════════════
-     CONFETTI — lightsaber colors
+     CONFETTI
      ═══════════════════════════════════════════════════════════════════════ */
   function launchConfetti() {
     const canvas = document.getElementById('confettiCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx    = canvas.getContext('2d');
     canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const colors = ['#FFD700','#4FC3F7','#EF5350','#66BB6A','#9C27B0','#FFFFFF','#FF9800','#00E5FF'];
-    const pieces = Array.from({ length: 160 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * -canvas.height,
-      w: Math.random() * 10 + 5,
-      h: Math.random() * 5  + 3,
-      vx: (Math.random() - 0.5) * 3,
-      vy: Math.random() * 4 + 2,
-      rot: Math.random() * Math.PI * 2,
-      vr: (Math.random() - 0.5) * 0.2,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    }));
+    const pieces = [];
+    const colors = ['#FFD700','#4FC3F7','#EF5350','#66BB6A','#CE93D8','#FF8A65'];
+    for (let i = 0; i < 160; i++) {
+      pieces.push({
+        x:  Math.random() * canvas.width,
+        y:  Math.random() * canvas.height - canvas.height,
+        w:  6 + Math.random() * 8,
+        h:  3 + Math.random() * 5,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        r:  Math.random() * Math.PI * 2,
+        dr: (Math.random() - .5) * .15,
+        dy: 2 + Math.random() * 3,
+        dx: (Math.random() - .5) * 1.5,
+      });
+    }
 
     let frame;
-    (function draw() {
+    function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      let active = 0;
+      let alive = false;
       pieces.forEach(p => {
-        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-        if (p.y < canvas.height + 20) active++;
+        p.y  += p.dy;
+        p.x  += p.dx;
+        p.r  += p.dr;
+        if (p.y < canvas.height + 20) alive = true;
         ctx.save();
         ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
+        ctx.rotate(p.r);
         ctx.fillStyle = p.color;
         ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
         ctx.restore();
       });
-      if (active > 0) frame = requestAnimationFrame(draw);
-    })();
-    setTimeout(() => cancelAnimationFrame(frame), 8000);
+      if (alive) frame = requestAnimationFrame(draw);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    frame = requestAnimationFrame(draw);
   }
 
   /* ══════════════════════════════════════════════════════════════════════
-     FLOATING PARTICLES
+     INIT
      ═══════════════════════════════════════════════════════════════════════ */
-  (function spawnParticles() {
-    const container = document.getElementById('particlesBg');
-    if (!container) return;
-    const emojis = ['✨', '⭐', '🌟', '💫', '🚀', '🌌', '⚡'];
-    for (let i = 0; i < 22; i++) {
-      const el = document.createElement('span');
-      el.className = 'particle';
-      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      el.style.left              = Math.random() * 100 + '%';
-      el.style.fontSize          = (Math.random() * 0.7 + 0.45) + 'rem';
-      el.style.animationDuration = (Math.random() * 14 + 10) + 's';
-      el.style.animationDelay    = (Math.random() * 14) + 's';
-      container.appendChild(el);
-    }
-  })();
-
-  /* ══════════════════════════════════════════════════════════════════════
-     EVENT LISTENERS
-     ═══════════════════════════════════════════════════════════════════════ */
-  startForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const name = nameInput.value.trim();
-    if (!name) {
-      startError.textContent = 'Please enter your name to begin!';
-      startError.hidden = false;
-      return;
-    }
-    playerName        = name;
-    startError.hidden = true;
-    startGame();
-  });
-
-  answerBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (!btn.classList.contains('locked'))
-        submitAnswer(parseInt(btn.dataset.idx, 10));
-    });
-  });
-
-  btnNext.addEventListener('click', () => { clearTimeout(autoNextHandle); advanceGame(); });
-  btnPlayAgain.addEventListener('click', resetGame);
-
-  window.addEventListener('resize', () => {
-    const c = document.getElementById('confettiCanvas');
-    if (c) { c.width = window.innerWidth; c.height = window.innerHeight; }
-  });
+  prefillJoinCode();
 
   </script>
 </body>
