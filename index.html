@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Star Wars Trivia ⚔️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Design Tokens ─────────────────────────────────────────────────── */
+    :root {
+      --gold:         #FFD700;
+      --gold-mid:     #e5b800;
+      --gold-glow:    rgba(255,215,0,0.35);
+      --blue:         #4FC3F7;
+      --blue-dark:    #0288D1;
+      --blue-glow:    rgba(79,195,247,0.30);
+      --red:          #EF5350;
+      --green:        #66BB6A;
+      --deep:         #050a18;
+      --deeper:       #020610;
+      --cream:        #E8EAF6;
+      --glass:        rgba(79,195,247,0.05);
+      --glass-2:      rgba(79,195,247,0.10);
+      --border-blue:  rgba(79,195,247,0.22);
+      --border-gold:  rgba(255,215,0,0.28);
+      --border-cream: rgba(232,234,246,0.15);
+      --col-a: #B71C1C;
+      --col-b: #1565C0;
+      --col-c: #E65100;
+      --col-d: #1B5E20;
+      --correct-green: #66BB6A;
+      --wrong-red:     #EF5350;
+      --font-h: 'Orbitron', monospace;
+      --font-b: 'Exo 2', 'Segoe UI', sans-serif;
+      --radius:    18px;
+      --radius-sm: 10px;
+      --shadow:    0 8px 40px rgba(0,0,0,0.65);
+      --shadow-b:  0 4px 24px rgba(79,195,247,0.18);
+    }
+
+    /* ─── Reset & Base ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: var(--font-b);
+      background: var(--deeper);
+      color: var(--cream);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Deep Space Background ──────────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 25%, rgba(10,25,80,0.85) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 75%, rgba(45,0,70,0.70) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, #020610 0%, #020610 100%);
+      z-index: 0;
+      animation: bgPulse 16s ease-in-out infinite alternate;
+    }
+    @keyframes bgPulse { from { opacity: 1; } to { opacity: 0.72; } }
+
+    /* ─── CSS Star Field ─────────────────────────────────────────────────── */
+    .starfield {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+    }
+    .starfield::before, .starfield::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.9) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 45%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 40% 5%,  rgba(255,255,255,0.8) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 20%, rgba(255,255,255,0.9) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 80% 55%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.8) 0%, transparent 100%),
+        radial-gradient(1px 1px at 5%  90%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 35% 85%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 60% 35%, rgba(255,255,255,0.9) 0%, transparent 100%),
+        radial-gradient(1px 1px at 18% 60%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 92%, rgba(255,255,255,0.7) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 48% 50%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 93% 10%, rgba(255,255,255,0.8) 0%, transparent 100%),
+        radial-gradient(1px 1px at 3%  40%, rgba(255,255,255,0.7) 0%, transparent 100%);
+      background-size: 100% 100%;
+      animation: twinkle 5s ease-in-out infinite alternate;
+    }
+    .starfield::after {
+      background-image:
+        radial-gradient(1px 1px at 8%  75%, rgba(200,220,255,0.7) 0%, transparent 100%),
+        radial-gradient(1px 1px at 22% 10%, rgba(200,220,255,0.8) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 45% 95%, rgba(200,220,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 63% 60%, rgba(200,220,255,0.9) 0%, transparent 100%),
+        radial-gradient(1px 1px at 82% 30%, rgba(200,220,255,0.7) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 95% 50%, rgba(200,220,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 15% 35%, rgba(255,215,0,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 15%, rgba(255,215,0,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 78% 68%, rgba(255,215,0,0.4) 0%, transparent 100%);
+      animation-delay: 2.5s;
+    }
+    @keyframes twinkle { from { opacity: 0.6; } to { opacity: 1; } }
+
+    /* ─── Floating Particles ─────────────────────────────────────────────── */
+    .particles-bg {
+      position: fixed; inset: 0;
+      pointer-events: none; overflow: hidden; z-index: 1;
+    }
+    .particle {
+      position: absolute; bottom: -5%;
+      opacity: 0; user-select: none;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(0) rotate(0deg);   opacity: 0; }
+      8%   { opacity: 0.45; }
+      92%  { opacity: 0.30; }
+      100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* ─── App Container ─────────────────────────────────────────────────── */
+    #app { position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ─── Screens ───────────────────────────────────────────────────────── */
+    .screen {
+      display: none; min-height: 100vh;
+      flex-direction: column; align-items: center; justify-content: center;
+      padding: 1rem;
+      animation: fadeIn 0.35s ease;
+    }
+    .screen.active { display: flex; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Cards ─────────────────────────────────────────────────────────── */
+    .card {
+      background: var(--glass-2);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-blue);
+      border-radius: var(--radius);
+      padding: 2rem 1.75rem;
+      width: 100%; max-width: 440px;
+      box-shadow: var(--shadow);
+    }
+
+    /* ─── Buttons ───────────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: .5rem; padding: .8rem 1.6rem; border: none;
+      border-radius: 50px; font-family: var(--font-b);
+      font-size: .95rem; font-weight: 600; cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, opacity .18s;
+      white-space: nowrap;
+    }
+    .btn:disabled { opacity: .4; pointer-events: none; }
+    .btn:active   { transform: scale(.96) !important; }
+    .btn-lg { font-size: 1.05rem; padding: .9rem 2rem; }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-mid));
+      color: #0a0a0a;
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 28px var(--gold-glow); }
+    .btn-blue {
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: #fff;
+    }
+    .btn-blue:hover { transform: translateY(-2px); box-shadow: 0 8px 28px var(--blue-glow); }
+
+    /* ─── Timer Ring ─────────────────────────────────────────────────────── */
+    .timer-wrap { position: relative; width: 68px; height: 68px; flex-shrink: 0; }
+    .timer-svg  { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .timer-track { fill: none; stroke: rgba(232,234,246,0.12); stroke-width: 9; }
+    .timer-ring {
+      fill: none; stroke: var(--blue); stroke-width: 9;
+      stroke-linecap: round;
+      stroke-dasharray: 263.9; stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear, stroke .5s ease;
+    }
+    .timer-num {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-h); font-weight: 700; font-size: 1.05rem;
+      color: var(--cream);
+    }
+
+    /* ─── Confetti Canvas ────────────────────────────────────────────────── */
+    .confetti-canvas {
+      position: fixed; inset: 0; pointer-events: none; z-index: 50;
+      width: 100%; height: 100%;
+    }
+
+    /* ─── Error ──────────────────────────────────────────────────────────── */
+    .error-msg { color: #ff7f7f; font-size: .85rem; margin-top: .5rem; text-align: center; }
+
+    /* ─── Saber Divider ──────────────────────────────────────────────────── */
+    .saber-divider {
+      width: 100%; height: 2px; border-radius: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue), var(--gold), var(--blue), transparent);
+      opacity: 0.5;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       START SCREEN
+       ═══════════════════════════════════════════════════════════════════════ */
+    .join-card { text-align: center; }
+    .brand { margin-bottom: 1.8rem; }
+    .brand-icon {
+      font-size: 2.8rem; margin-bottom: .6rem;
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    .brand-title {
+      font-family: var(--font-h);
+      font-size: clamp(1.3rem, 5vw, 1.75rem);
+      color: var(--gold);
+      letter-spacing: .06em;
+      text-shadow: 0 0 22px var(--gold-glow);
+    }
+    .brand-sub {
+      font-family: var(--font-h);
+      font-size: clamp(.7rem, 2.5vw, .9rem);
+      color: var(--blue); margin-top: .4rem; letter-spacing: .1em;
+    }
+    .brand-desc { font-size: .82rem; color: rgba(232,234,246,.45); margin-top: .6rem; line-height: 1.5; }
+    .join-form  { display: flex; flex-direction: column; gap: .9rem; }
+    .name-input {
+      width: 100%; padding: .85rem 1.1rem;
+      background: rgba(79,195,247,.07); border: 1.5px solid var(--border-blue);
+      border-radius: 50px; color: var(--cream); font-family: var(--font-b);
+      font-size: 1rem; text-align: center; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .name-input::placeholder { color: rgba(232,234,246,.3); }
+    .name-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(79,195,247,.18);
+    }
+    .trivia-meta {
+      margin-top: 1.2rem; padding-top: 1rem;
+      border-top: 1px solid var(--border-cream);
+      display: flex; justify-content: center; gap: 1.4rem; flex-wrap: wrap;
+    }
+    .trivia-meta span {
+      font-size: .78rem; color: rgba(232,234,246,.4);
+      display: flex; align-items: center; gap: .3rem;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       QUESTION SCREEN
+       ═══════════════════════════════════════════════════════════════════════ */
+    .question-screen { justify-content: flex-start; padding: 0; gap: 0; }
+    .q-header {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; padding: .65rem 1rem;
+      background: rgba(0,0,0,.45); border-bottom: 1px solid var(--border-blue);
+      flex-shrink: 0;
+    }
+    .q-progress {
+      font-family: var(--font-h); font-weight: 700;
+      font-size: .78rem; color: var(--blue); letter-spacing: .05em;
+    }
+    .q-score-badge { display: flex; flex-direction: column; align-items: flex-end; }
+    .q-score-label { font-size: .62rem; color: rgba(232,234,246,.4); text-transform: uppercase; letter-spacing: .05em; }
+    .q-score-value { font-family: var(--font-h); font-size: .88rem; font-weight: 700; color: var(--gold); }
+    .q-body {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: .8rem 1rem; width: 100%;
+    }
+    .q-text {
+      font-family: var(--font-b);
+      font-size: clamp(.98rem, 3.8vw, 1.28rem);
+      font-weight: 600; text-align: center;
+      color: var(--cream); line-height: 1.5; max-width: 560px;
+    }
+
+    /* ─── Answer Grid ────────────────────────────────────────────────────── */
+    .answer-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: .5rem; padding: .5rem; width: 100%; flex-shrink: 0;
+    }
+    .ans-btn {
+      display: flex; flex-direction: column; align-items: flex-start;
+      gap: .35rem; padding: .8rem .9rem; border: none;
+      border-radius: var(--radius-sm); cursor: pointer;
+      transition: transform .15s, opacity .15s, filter .15s;
+      min-height: 74px; text-align: left;
+      position: relative; overflow: hidden;
+    }
+    .ans-btn::after {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(255,255,255,0); transition: background .15s;
+    }
+    .ans-btn:hover::after  { background: rgba(255,255,255,.08); }
+    .ans-btn:active::after { background: rgba(255,255,255,.18); }
+    .ans-a { background: var(--col-a); }
+    .ans-b { background: var(--col-b); }
+    .ans-c { background: var(--col-c); }
+    .ans-d { background: var(--col-d); }
+    .ans-letter {
+      font-family: var(--font-h); font-weight: 700; font-size: .88rem;
+      color: rgba(255,255,255,.9); background: rgba(0,0,0,.28);
+      border-radius: 6px; width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .ans-text { font-size: .84rem; font-weight: 600; color: #fff; line-height: 1.25; }
+    .ans-btn.selected { transform: scale(.96); filter: brightness(1.18); box-shadow: 0 0 0 3px #fff; }
+    .ans-btn.locked   { pointer-events: none; }
+    .ans-btn.wrong    { opacity: .38; }
+    .ans-btn.reveal-correct {
+      box-shadow: 0 0 0 4px var(--correct-green);
+      animation: flashCorrect .65s ease;
+    }
+    @keyframes flashCorrect { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       RESULT SCREEN
+       ═══════════════════════════════════════════════════════════════════════ */
+    .result-card   { text-align: center; }
+    .result-icon   { font-size: 3.5rem; margin-bottom: .6rem; animation: popIn .5s cubic-bezier(.17,.67,.35,1.3); }
+    @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+    .result-verdict {
+      font-family: var(--font-h); font-size: 1.35rem;
+      color: var(--cream); letter-spacing: .04em;
+    }
+    .result-delta {
+      font-family: var(--font-h); font-size: 2rem;
+      font-weight: 700; margin: .5rem 0 .2rem;
+    }
+    .result-delta.pos { color: var(--correct-green); }
+    .result-delta.neg { color: var(--wrong-red); }
+    .result-delta.neu { color: rgba(232,234,246,.45); }
+    .result-score-label { font-size: .78rem; color: rgba(232,234,246,.5); text-transform: uppercase; letter-spacing: .06em; }
+    .result-score { font-family: var(--font-h); font-size: 1.9rem; font-weight: 700; color: var(--gold); margin-top: .1rem; }
+    .result-answer-wrap { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--border-cream); }
+    .result-answer-label { font-size: .78rem; color: rgba(232,234,246,.5); margin-bottom: .4rem; }
+    .result-answer-text  { font-family: var(--font-h); font-size: .9rem; color: var(--gold); font-weight: 700; letter-spacing: .02em; }
+    .auto-next-bar {
+      margin-top: 1.2rem; height: 4px;
+      background: rgba(232,234,246,.12); border-radius: 2px; overflow: hidden;
+    }
+    .auto-next-fill { height: 100%; width: 0%; background: var(--blue); border-radius: 2px; }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       FINAL SCREEN
+       ═══════════════════════════════════════════════════════════════════════ */
+    .final-screen { justify-content: flex-start; padding-top: 2rem; padding-bottom: 2rem; }
+    .final-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 1rem; width: 100%; max-width: 540px;
+      position: relative; z-index: 5;
+    }
+    .final-title {
+      font-family: var(--font-h);
+      font-size: clamp(1.5rem, 5vw, 2.6rem);
+      color: var(--gold);
+      text-shadow: 0 2px 22px var(--gold-glow);
+      text-align: center; letter-spacing: .06em;
+    }
+    .final-subtitle {
+      font-family: var(--font-h);
+      font-size: clamp(.7rem, 2.5vw, .92rem);
+      color: var(--blue); text-align: center; letter-spacing: .1em;
+    }
+    .final-score-card {
+      background: var(--glass-2); border: 1px solid var(--border-blue);
+      border-radius: var(--radius); padding: 1.5rem 2rem;
+      text-align: center; width: 100%; box-shadow: var(--shadow-b);
+    }
+    .fsc-label  { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: rgba(232,234,246,.4); margin-bottom: .3rem; }
+    .fsc-score  { font-family: var(--font-h); font-size: 3rem; font-weight: 700; color: var(--gold); line-height: 1; }
+    .fsc-pts    { font-size: .82rem; color: rgba(232,234,246,.4); margin-top: .2rem; }
+    .fsc-correct {
+      margin-top: .8rem; padding-top: .8rem;
+      border-top: 1px solid var(--border-cream);
+      font-size: .98rem; color: var(--cream); font-weight: 600;
+    }
+    .fsc-correct strong { color: var(--correct-green); }
+    .final-message {
+      background: var(--glass); border: 1px solid var(--border-blue);
+      border-radius: var(--radius-sm); padding: 1rem 1.2rem;
+      font-family: var(--font-h); font-size: .82rem;
+      color: var(--cream); text-align: center; line-height: 1.7;
+      width: 100%; letter-spacing: .02em;
+    }
+    .final-actions {
+      display: flex; gap: .8rem; flex-wrap: wrap;
+      justify-content: center; width: 100%; margin-top: .5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="starfield" aria-hidden="true"></div>
+  <div class="particles-bg" id="particlesBg" aria-hidden="true"></div>
+
+  <div id="app">
+
+    <!-- ══════════════════════════════════════════════════════════
+         SCREEN: START
+    ═══════════════════════════════════════════════════════════════ -->
+    <div id="screen-start" class="screen active">
+      <div class="card join-card">
+        <div class="brand">
+          <div class="brand-icon">⚔️</div>
+          <h1 class="brand-title">Star Wars Trivia</h1>
+          <h2 class="brand-sub">A Galaxy of Questions</h2>
+          <p class="brand-desc">
+            Movies &bull; The Mandalorian &bull; Andor<br>
+            Rebels &bull; The Clone Wars &bull; And More
+          </p>
+        </div>
+        <form id="startForm" class="join-form" autocomplete="off">
+          <input
+            id="nameInput"
+            class="name-input"
+            type="text"
+            placeholder="Enter your name, young Padawan…"
+            maxlength="20"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button type="submit" class="btn btn-gold btn-lg">Begin Your Quest ⚡</button>
+        </form>
+        <p id="startError" class="error-msg" hidden></p>
+        <div class="trivia-meta">
+          <span>❓ 24 Questions</span>
+          <span>⏱ 20 sec each</span>
+          <span>🏆 Score for speed</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SCREEN: QUESTION
+    ═══════════════════════════════════════════════════════════════ -->
+    <div id="screen-question" class="screen question-screen">
+      <div class="q-header">
+        <div class="q-progress">Q&nbsp;<span id="qNum">1</span>&nbsp;/&nbsp;<span id="qTotal">20</span></div>
+        <div class="timer-wrap">
+          <svg class="timer-svg" viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="timer-track" cx="50" cy="50" r="42"/>
+            <circle class="timer-ring" id="timerRing" cx="50" cy="50" r="42"/>
+          </svg>
+          <span class="timer-num" id="timerNum">60</span>
+        </div>
+        <div class="q-score-badge">
+          <span class="q-score-label">Score</span>
+          <span class="q-score-value" id="scoreDisplay">0</span>
+        </div>
+      </div>
+
+      <div class="q-body">
+        <p class="q-text" id="qText"></p>
+      </div>
+
+      <div class="answer-grid" id="answerGrid">
+        <button class="ans-btn ans-a" data-idx="0" aria-label="Answer A">
+          <span class="ans-letter">A</span>
+          <span class="ans-text" id="opt-0"></span>
+        </button>
+        <button class="ans-btn ans-b" data-idx="1" aria-label="Answer B">
+          <span class="ans-letter">B</span>
+          <span class="ans-text" id="opt-1"></span>
+        </button>
+        <button class="ans-btn ans-c" data-idx="2" aria-label="Answer C">
+          <span class="ans-letter">C</span>
+          <span class="ans-text" id="opt-2"></span>
+        </button>
+        <button class="ans-btn ans-d" data-idx="3" aria-label="Answer D">
+          <span class="ans-letter">D</span>
+          <span class="ans-text" id="opt-3"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SCREEN: RESULT (per question)
+    ═══════════════════════════════════════════════════════════════ -->
+    <div id="screen-result" class="screen">
+      <div class="card result-card">
+        <div class="result-icon" id="resultIcon">✅</div>
+        <h2 class="result-verdict" id="resultVerdict">Correct!</h2>
+        <div class="result-delta" id="resultDelta">+1500</div>
+        <div class="result-score-label">Total score</div>
+        <div class="result-score" id="resultScore">1500</div>
+        <div class="result-answer-wrap">
+          <p class="result-answer-label">The correct answer was:</p>
+          <div class="result-answer-text" id="resultAnswer"></div>
+        </div>
+        <button id="btnNext" class="btn btn-blue btn-lg" style="margin-top:1.2rem;width:100%">
+          Next Question →
+        </button>
+        <div class="auto-next-bar" style="margin-top:.8rem">
+          <div class="auto-next-fill" id="autoNextFill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SCREEN: FINAL
+    ═══════════════════════════════════════════════════════════════ -->
+    <div id="screen-final" class="screen final-screen">
+      <div class="final-wrap">
+        <h1 class="final-title">Mission Complete!</h1>
+        <div class="saber-divider"></div>
+        <p class="final-subtitle">⚔️ &nbsp; The Force Has Spoken &nbsp; ⚔️</p>
+
+        <div class="final-score-card">
+          <div class="fsc-label">Your Final Score</div>
+          <div class="fsc-score" id="finalScore">0</div>
+          <div class="fsc-pts">points</div>
+          <div class="fsc-correct" id="finalCorrect">0 / 20 correct</div>
+        </div>
+
+        <div class="final-message" id="finalMessage"></div>
+
+        <div class="final-actions">
+          <button id="btnPlayAgain" class="btn btn-gold btn-lg">Play Again 🔄</button>
+        </div>
+      </div>
+      <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+    </div>
+
+  </div><!-- #app -->
+
+  <script>
+  'use strict';
+
+  /* ══════════════════════════════════════════════════════════════════════
+     QUESTIONS — 24 total
+     ═══════════════════════════════════════════════════════════════════════ */
+  const QUESTIONS = [
+    {
+      text: 'What was the original planned title for Return of the Jedi before George Lucas changed it?',
+      options: ['Revenge of the Jedi', 'Return of the Jedi (there was no change)', 'Blue Harvest', 'The Jedi Strike Back'],
+      correct: 0,
+    },
+    {
+      text: 'In the trash compactor scene in Episode IV: A New Hope, who said "One thing\'s for sure — we are all going to be a lot thinner"?',
+      options: ['Han Solo', 'Princess Leia', 'Luke Skywalker', 'C-3PO'],
+      correct: 0,
+    },
+    {
+      text: 'Which Imperial warlord secretly experiments on Grogu\'s Force-sensitive blood to create enhanced soldiers for a new Empire?',
+      options: ['Grand Admiral Thrawn', 'Governor Pryce', 'Director Krennic', 'Moff Gideon'],
+      correct: 3,
+    },
+    {
+      text: 'What is the name of Mon Mothma\'s husband in Andor, whose connections she used to disguise her rebel fundraising?',
+      options: ['Perrin Fertha', 'Bail Organa', 'Luthen Rael', 'Tay Kolma'],
+      correct: 0,
+    },
+    {
+      text: 'What is the industrialized planet — home to Cassian\'s adoptive mother Maarva — where the Andor series begins and ends?',
+      options: ['Ferrix', 'Morlana One', 'Aldhani', 'Scarif'],
+      correct: 0,
+    },
+    {
+      text: 'In Revenge of the Sith, on which jungle planet does Yoda fight alongside Wookiee warriors during the execution of Order 66?',
+      options: ['Kashyyyk', 'Felucia', 'Mygeeto', 'Utapau'],
+      correct: 0,
+    },
+    {
+      text: 'In Revenge of the Sith, on which sinkhole planet does Obi-Wan Kenobi track down and defeat General Grievous?',
+      options: ['Utapau', 'Kashyyyk', 'Coruscant', 'Mustafar'],
+      correct: 0,
+    },
+    {
+      text: 'Who played Queen Amidala\'s handmaiden and decoy Sabé in The Phantom Menace?',
+      options: ['Daisy Ridley', 'Felicity Jones', 'Emilia Clarke', 'Keira Knightley'],
+      correct: 3,
+    },
+    {
+      text: 'Who serves as the genetic template for the Republic\'s clone army?',
+      options: ['Boba Fett', 'Captain Rex', 'Jango Fett', 'Commander Cody'],
+      correct: 2,
+    },
+    {
+      text: 'What type of ship features twin ion engines — the very feature that gives it its name?',
+      options: ['TIE Fighter', 'X-Wing', 'Star Destroyer', 'Jedi Starfighter'],
+      correct: 0,
+    },
+    {
+      text: 'Who played the role of Jyn Erso in "Rogue One: A Star Wars Story"?',
+      options: ['Daisy Ridley', 'Emilia Clarke', 'Keira Knightley', 'Felicity Jones'],
+      correct: 3,
+    },
+    {
+      text: 'Who gave Kylo Ren his distinctive facial scar?',
+      options: ['Rey', 'Luke Skywalker', 'Supreme Leader Snoke', 'Captain Phasma'],
+      correct: 0,
+    },
+    {
+      text: 'How old was Padmé Amidala when she was elected Queen of Naboo?',
+      options: ['14', '13', '16', '17'],
+      correct: 0,
+    },
+    {
+      text: 'What is Yoda\'s home planet?',
+      options: ['Never revealed', 'Dagobah', 'Forest Moon of Endor', 'Ach-To'],
+      correct: 0,
+    },
+    {
+      text: 'How is Kylo Ren related to Luke Skywalker?',
+      options: ['Nephew', 'Cousin', 'Not related', 'Son'],
+      correct: 0,
+    },
+    {
+      text: 'How many languages can C-3PO speak?',
+      options: ['6 million', '10 thousand', '10 million', '500'],
+      correct: 0,
+    },
+    {
+      text: 'What is the highest-grossing Star Wars movie — adjusted for inflation?',
+      options: ['The Force Awakens', 'A New Hope', 'Return of the Jedi', 'Revenge of the Sith'],
+      correct: 1,
+    },
+    {
+      text: 'What does Yoda say is the path to the dark side?',
+      options: ['Fear', 'Anger', 'Hate', 'Love'],
+      correct: 0,
+    },
+    {
+      text: 'Sound designers created the distinctive engine sound of the Millennium Falcon from what real-world source?',
+      options: ['A 1965 Ford Mustang', 'A malfunctioning hotel air conditioner', 'An industrial coffee grinder on low speed', '4 hair dryers running simultaneously'],
+      correct: 1,
+    },
+    {
+      text: 'What do the letters AT-AT stand for in the Imperial ground assault walkers?',
+      options: ['All-Terrain Armored Transport', 'Advanced Terrain Assault Tank', 'Arctic Terrain Assault Transport', 'Advanced Tactical Armored Transport'],
+      correct: 0,
+    },
+    {
+      text: 'What was the last Star Wars film to be released on VHS?',
+      options: ['Episode II: Attack of the Clones', 'Episode III: Revenge of the Sith', 'Episode I: The Phantom Menace', 'Return of the Jedi'],
+      correct: 0,
+    },
+    {
+      text: 'What real-world city served as the inspiration for Han Solo\'s home planet Corellia?',
+      options: ['Venice', 'London', 'New York', 'Naples'],
+      correct: 0,
+    },
+    {
+      text: 'How much did Peter Mayhew\'s Chewbacca costume weigh?',
+      options: ['8 pounds', '150 pounds', '40 pounds', '25 pounds'],
+      correct: 0,
+    },
+    {
+      text: 'The first two Star Wars anthology films — Rogue One and Solo — each end with a ship en route to which location?',
+      options: ['Tatooine', 'Coruscant', 'Yavin 4', 'Moon of Endor'],
+      correct: 0,
+    },
+  ];
+
+  /* ══════════════════════════════════════════════════════════════════════
+     CONSTANTS
+     ═══════════════════════════════════════════════════════════════════════ */
+  const QUESTION_TIME   = 60;
+  const MAX_POINTS      = 1000;
+  const SPEED_BONUS_MAX = 500;
+  const WRONG_PENALTY   = 500;
+  const CIRC            = 2 * Math.PI * 42;
+
+  /* ══════════════════════════════════════════════════════════════════════
+     STATE
+     ═══════════════════════════════════════════════════════════════════════ */
+  let playerName        = '';
+  let score             = 0;
+  let correctCount      = 0;
+  let currentIndex      = 0;
+  let timerHandle       = null;
+  let timerRemain       = 0;
+  let questionStart     = null;
+  let answered          = false;
+  let autoNextHandle    = null;
+  let shuffledQuestions = [];
+
+  /* ══════════════════════════════════════════════════════════════════════
+     DOM REFS
+     ═══════════════════════════════════════════════════════════════════════ */
+  const screens       = document.querySelectorAll('.screen');
+  const nameInput     = document.getElementById('nameInput');
+  const startForm     = document.getElementById('startForm');
+  const startError    = document.getElementById('startError');
+  const qNum          = document.getElementById('qNum');
+  const qTotal        = document.getElementById('qTotal');
+  const qText         = document.getElementById('qText');
+  const timerRing     = document.getElementById('timerRing');
+  const timerNum      = document.getElementById('timerNum');
+  const scoreDisplay  = document.getElementById('scoreDisplay');
+  const answerBtns    = Array.from(document.querySelectorAll('.ans-btn'));
+  const resultIcon    = document.getElementById('resultIcon');
+  const resultVerdict = document.getElementById('resultVerdict');
+  const resultDelta   = document.getElementById('resultDelta');
+  const resultScore   = document.getElementById('resultScore');
+  const resultAnswer  = document.getElementById('resultAnswer');
+  const btnNext       = document.getElementById('btnNext');
+  const autoNextFill  = document.getElementById('autoNextFill');
+  const finalScore    = document.getElementById('finalScore');
+  const finalCorrect  = document.getElementById('finalCorrect');
+  const finalMessage  = document.getElementById('finalMessage');
+  const btnPlayAgain  = document.getElementById('btnPlayAgain');
+
+  /* ══════════════════════════════════════════════════════════════════════
+     HELPERS
+     ═══════════════════════════════════════════════════════════════════════ */
+  function showScreen(id) {
+    screens.forEach(s => s.classList.remove('active'));
+    const el = document.getElementById('screen-' + id);
+    if (el) el.classList.add('active');
+  }
+
+  function setTimerUI(remaining, total) {
+    const pct    = remaining / total;
+    const offset = CIRC * (1 - pct);
+    timerRing.style.strokeDashoffset = offset;
+    timerNum.textContent = remaining;
+    timerRing.style.stroke = pct > 0.5 ? '#4FC3F7' : pct > 0.25 ? '#FFD700' : '#EF5350';
+  }
+
+  function clearAllTimers() {
+    clearInterval(timerHandle);
+    clearTimeout(autoNextHandle);
+    timerHandle = autoNextHandle = null;
+  }
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function prepareQuestions() {
+    return shuffle(QUESTIONS).map(q => {
+      const correctText = q.options[q.correct];
+      const opts = shuffle(q.options);
+      return { text: q.text, options: opts, correct: opts.indexOf(correctText) };
+    });
+  }
+
+  function lockAnswers(selectedIdx) {
+    answerBtns.forEach((btn, i) => {
+      btn.classList.add('locked');
+      if (i === selectedIdx) btn.classList.add('selected');
+    });
+  }
+
+  function revealAnswers(correctIdx, yourIdx) {
+    answerBtns.forEach((btn, i) => {
+      btn.classList.add('locked');
+      if (i === correctIdx) {
+        btn.classList.add('reveal-correct');
+      } else if (yourIdx !== null && i === yourIdx && yourIdx !== correctIdx) {
+        btn.classList.add('wrong');
+      }
+    });
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     GAME FLOW
+     ═══════════════════════════════════════════════════════════════════════ */
+  function startGame() {
+    score             = 0;
+    correctCount      = 0;
+    currentIndex      = 0;
+    shuffledQuestions = prepareQuestions();
+    showQuestion(0);
+  }
+
+  function showQuestion(index) {
+    clearAllTimers();
+    answered     = false;
+    currentIndex = index;
+    const q = shuffledQuestions[index];
+
+    qNum.textContent   = index + 1;
+    qTotal.textContent = shuffledQuestions.length;
+    qText.textContent  = q.text;
+    scoreDisplay.textContent = score.toLocaleString();
+
+    const classes = ['ans-a', 'ans-b', 'ans-c', 'ans-d'];
+    answerBtns.forEach((btn, i) => {
+      btn.className = `ans-btn ${classes[i]}`;
+      document.getElementById('opt-' + i).textContent = q.options[i] || '';
+    });
+
+    timerRing.style.transition       = 'none';
+    timerRing.style.strokeDashoffset = '0';
+    timerRing.style.stroke           = '#4FC3F7';
+    void timerRing.offsetHeight;
+    timerRing.style.transition = 'stroke-dashoffset 1s linear, stroke .5s ease';
+
+    showScreen('question');
+
+    timerRemain   = QUESTION_TIME;
+    questionStart = Date.now();
+    setTimerUI(timerRemain, QUESTION_TIME);
+
+    timerHandle = setInterval(() => {
+      timerRemain = Math.max(0, timerRemain - 1);
+      setTimerUI(timerRemain, QUESTION_TIME);
+      if (timerRemain <= 0) { clearInterval(timerHandle); onTimeUp(); }
+    }, 1000);
+  }
+
+  function onTimeUp() {
+    if (answered) return;
+    answered = true;
+    const q = shuffledQuestions[currentIndex];
+    revealAnswers(q.correct, null);
+    setTimeout(() => showResult(false, 0, q.options[q.correct], true), 1200);
+  }
+
+  function submitAnswer(selectedIdx) {
+    if (answered) return;
+    answered = true;
+    clearInterval(timerHandle);
+
+    const q        = shuffledQuestions[currentIndex];
+    const elapsed  = (Date.now() - questionStart) / 1000;
+    const timeLeft = Math.max(0, QUESTION_TIME - elapsed);
+    const correct  = selectedIdx === q.correct;
+
+    let delta = correct
+      ? MAX_POINTS + Math.round(SPEED_BONUS_MAX * (timeLeft / QUESTION_TIME))
+      : -WRONG_PENALTY;
+    if (correct) correctCount++;
+    score = Math.max(0, score + delta);
+
+    lockAnswers(selectedIdx);
+    setTimeout(() => {
+      revealAnswers(q.correct, selectedIdx);
+      setTimeout(() => showResult(correct, delta, q.options[q.correct], false), 900);
+    }, 300);
+  }
+
+  function showResult(correct, delta, correctText, noAnswer) {
+    resultIcon.textContent    = noAnswer ? '⏰' : correct ? '✅' : '❌';
+    resultVerdict.textContent = noAnswer ? "Time's Up!" : correct ? 'Correct! ⚡' : 'Wrong!';
+    resultDelta.textContent   = delta > 0 ? `+${delta}` : `${delta}`;
+    resultDelta.className     = 'result-delta ' + (delta > 0 ? 'pos' : delta < 0 ? 'neg' : 'neu');
+    resultScore.textContent   = score.toLocaleString();
+    resultAnswer.textContent  = correctText;
+
+    const isLast = currentIndex === shuffledQuestions.length - 1;
+    btnNext.textContent = isLast ? 'See Final Results 🏆' : 'Next Question →';
+    showScreen('result');
+
+    autoNextFill.style.transition = 'none';
+    autoNextFill.style.width      = '0%';
+    void autoNextFill.offsetHeight;
+    autoNextFill.style.transition = 'width 5s linear';
+    autoNextFill.style.width      = '100%';
+    autoNextHandle = setTimeout(advanceGame, 5000);
+  }
+
+  function advanceGame() {
+    clearTimeout(autoNextHandle);
+    const next = currentIndex + 1;
+    if (next >= shuffledQuestions.length) showFinal();
+    else showQuestion(next);
+  }
+
+  function showFinal() {
+    finalScore.textContent = score.toLocaleString();
+    const pct = correctCount / shuffledQuestions.length;
+    finalCorrect.innerHTML = `<strong style="color:var(--correct-green)">${correctCount}</strong> / ${shuffledQuestions.length} correct`;
+
+    let msg;
+    if (pct === 1) {
+      msg = `🏆 PERFECT SCORE! The Force is OVERWHELMINGLY strong with you, ${playerName}! You are a true Jedi Master!`;
+    } else if (pct >= 0.8) {
+      msg = `⚔️ INCREDIBLE, ${playerName}! Your knowledge of the galaxy rivals that of Master Yoda himself!`;
+    } else if (pct >= 0.6) {
+      msg = `🌟 WELL DONE, ${playerName}! The Force is strong with this one. A skilled Jedi Knight you shall become!`;
+    } else if (pct >= 0.4) {
+      msg = `🚀 NOT BAD, ${playerName}! Your Padawan training continues. Even the greatest Jedi started small!`;
+    } else {
+      msg = `💫 Fear not, ${playerName}! Even Yoda was a student once. May the Force guide your studies!`;
+    }
+    finalMessage.textContent = msg;
+    showScreen('final');
+    launchConfetti();
+  }
+
+  function resetGame() {
+    clearAllTimers();
+    score = correctCount = currentIndex = 0;
+    answered = false;
+    playerName = '';
+    nameInput.value   = '';
+    startError.hidden = true;
+    showScreen('start');
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     CONFETTI — lightsaber colors
+     ═══════════════════════════════════════════════════════════════════════ */
+  function launchConfetti() {
+    const canvas = document.getElementById('confettiCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = ['#FFD700','#4FC3F7','#EF5350','#66BB6A','#9C27B0','#FFFFFF','#FF9800','#00E5FF'];
+    const pieces = Array.from({ length: 160 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * -canvas.height,
+      w: Math.random() * 10 + 5,
+      h: Math.random() * 5  + 3,
+      vx: (Math.random() - 0.5) * 3,
+      vy: Math.random() * 4 + 2,
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.2,
+      color: colors[Math.floor(Math.random() * colors.length)],
+    }));
+
+    let frame;
+    (function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let active = 0;
+      pieces.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        if (p.y < canvas.height + 20) active++;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      if (active > 0) frame = requestAnimationFrame(draw);
+    })();
+    setTimeout(() => cancelAnimationFrame(frame), 8000);
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     FLOATING PARTICLES
+     ═══════════════════════════════════════════════════════════════════════ */
+  (function spawnParticles() {
+    const container = document.getElementById('particlesBg');
+    if (!container) return;
+    const emojis = ['✨', '⭐', '🌟', '💫', '🚀', '🌌', '⚡'];
+    for (let i = 0; i < 22; i++) {
+      const el = document.createElement('span');
+      el.className = 'particle';
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      el.style.left              = Math.random() * 100 + '%';
+      el.style.fontSize          = (Math.random() * 0.7 + 0.45) + 'rem';
+      el.style.animationDuration = (Math.random() * 14 + 10) + 's';
+      el.style.animationDelay    = (Math.random() * 14) + 's';
+      container.appendChild(el);
+    }
+  })();
+
+  /* ══════════════════════════════════════════════════════════════════════
+     EVENT LISTENERS
+     ═══════════════════════════════════════════════════════════════════════ */
+  startForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = nameInput.value.trim();
+    if (!name) {
+      startError.textContent = 'Please enter your name to begin!';
+      startError.hidden = false;
+      return;
+    }
+    playerName        = name;
+    startError.hidden = true;
+    startGame();
+  });
+
+  answerBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!btn.classList.contains('locked'))
+        submitAnswer(parseInt(btn.dataset.idx, 10));
+    });
+  });
+
+  btnNext.addEventListener('click', () => { clearTimeout(autoNextHandle); advanceGame(); });
+  btnPlayAgain.addEventListener('click', resetGame);
+
+  window.addEventListener('resize', () => {
+    const c = document.getElementById('confettiCanvas');
+    if (c) { c.width = window.innerWidth; c.height = window.innerHeight; }
+  });
+
+  </script>
+</body>
+</html>
