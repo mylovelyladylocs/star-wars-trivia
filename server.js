@@ -14,7 +14,17 @@ const PORT = process.env.PORT || 3000;
 const QUESTION_DURATION_MS = 20000;
 
 // ── Static files ──────────────────────────────────────────────────────────────
-app.use(express.static(path.join(__dirname, 'public')));
+const publicDir = path.join(__dirname, 'public');
+console.log('Serving static files from:', publicDir);
+app.use(express.static(publicDir));
+
+// ── Health check ──────────────────────────────────────────────────────────────
+app.get('/health', (req, res) => res.send('OK'));
+
+// ── Fallback: serve index.html for all non-API routes ─────────────────────────
+app.get('*', (req, res) => {
+  res.sendFile(path.join(publicDir, 'index.html'));
+});
 
 // ── In-memory rooms ───────────────────────────────────────────────────────────
 // Map<roomCode, RoomState>
